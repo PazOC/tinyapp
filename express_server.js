@@ -9,6 +9,9 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+const bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({extended: true}));
+
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
@@ -39,9 +42,14 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
+app.get("/urls/new", (req, res) => {
+  res.render("urls_new");
+});
+
 app.get("/urls/:shortURL", (req, res) => { 
   const shortURL = req.params.shortURL
   const longURL = urlDatabase[shortURL]
   const templateVars = { shortURL, longURL };
   res.render("urls_show", templateVars);
 });
+
