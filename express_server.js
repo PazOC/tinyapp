@@ -10,7 +10,8 @@ function generateRandomString(length = 6) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
    }
    return result;    
-}
+};
+
 
 app.set("view engine", "ejs");
 
