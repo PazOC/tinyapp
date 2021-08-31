@@ -3,13 +3,7 @@ const app = express();
 const PORT = 8080; // default port 8080
 
 function generateRandomString(length = 6) {
-    let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const charactersLength = characters.length;
-    for ( let i = 0; i < length; i++ ) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-   }
-   return result;    
+  return Math.random().toString(32).substr(2, 6);
 };
 
 
@@ -66,5 +60,15 @@ app.get("/urls/:shortURL", (req, res) => {
 
 app.post("/urls", (req, res) => {
   console.log(req.body);  // Log the POST request body to the console
-  res.send("Ok");         // Respond with 'Ok' (we will replace this)
+  const id = generateRandomString()
+  const url = req.body;
+  urlDatabase[id] = url.longURL;
+  res.redirect('/url/'+id);
 });
+
+app.get("/u/:shortURL", (req, res) => {
+  const shortURL = req.params.shortURL
+  const longURL = urlDatabase[shortURL]
+  res.redirect(longURL);
+});
+
