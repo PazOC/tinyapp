@@ -9,7 +9,23 @@
         <a class="nav-item nav-link" href="/urls">My URLs</a>
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
       </div>
-    </div>
+      <ul>
+      <div>
+         <% if (locals.user_id) {%>
+        <h4>Hello, <%= locals.user_id.email%></h4>
+          <form method= "POST" action="/logout">
+          <button type="submit">Logout</button>
+          </form>
+            <% } else { %>
+            <form method="GET" action="/login">
+          <button type="submit" class="btn btn-outline-dark">Login</button>
+          </form>
+          <form method="GET" action="/register">
+          <button type="submit" class="btn btn-outline-dark">Register</button>
+          </form>
+           <% } %>
+         </div>
+    </ul>
   </nav>
 </header>
 
