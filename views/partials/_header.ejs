@@ -11,18 +11,20 @@
       </div>
       <ul>
       <div>
-        <% if (username) {%>
-          <h4>Hello, <%= username%></h4>
+         <% if (locals.user_id) {%>
+        <h4>Hello, <%= locals.user_id.email%></h4>
           <form method= "POST" action="/logout">
-            <button type="submit">Logout</button>
+          <button type="submit">Logout</button>
           </form>
             <% } else { %>
-            <form method="POST" action="/login">
-          <input type="name" name="username" placeholder="Username">
+            <form method="GET" action="/login">
           <button type="submit" class="btn btn-outline-dark">Login</button>
           </form>
-          <% } %>
-    </div>
+          <form method="GET" action="/register">
+          <button type="submit" class="btn btn-outline-dark">Register</button>
+          </form>
+           <% } %>
+         </div>
     </ul>
   </nav>
 </header>
