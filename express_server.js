@@ -12,9 +12,20 @@ function generateRandomString(length = 6) {
 
 app.set("view engine", "ejs");
 
+// const urlDatabase = {
+//   "b2xVn2": "http://www.lighthouselabs.ca",
+//   "9sm5xK": "http://www.google.com"
+// };
+          
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  b6UTxQ: {
+    longURL: "https://www.tsn.ca",
+    userID: "aJ48lW"
+  },
+  i3BoGr: {
+    longURL: "https://www.google.ca",
+    userID: "aJ48lW"
+  }
 };
 
 const users = { 
@@ -27,12 +38,12 @@ const users = {
     id: "user2RandomID", 
     email: "user2@example.com", 
     password: "dishwasher-funk"
-  }
+  },
 }
 
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(cookieParser())
+app.use(cookieParser());
 
 // go to views and find those that render _header
 // find end points that render those views and pass username inside templatevars object.
@@ -71,21 +82,43 @@ app.get("/urls", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
+  const user = req.cookies["user_id"];
   const templateVars = {
-    username: req.cookies["user_id"]
+    username: user
   };
-  res.render("urls_new", templateVars);
+  console.log("this is user id:",user);
+  if (user) {
+    res.render("urls_new", templateVars);
+    } else {
+    res.redirect("/login");
+    }
 });
 
 app.get("/urls/:shortURL", (req, res) => { 
   const shortURL = req.params.shortURL
-  const longURL = urlDatabase[shortURL]
+  const longURL = urlDatabase[shortURL].longURL
   const templateVars = { 
     shortURL, 
     longURL,
     username: req.cookies["user_id"]
    };
   res.render("urls_show", templateVars);
+});
+
+app.get("/register", (req, res) => {
+  
+  res.render("urls_registration")
+});
+
+app.get("/u/:shortURL", (req, res) => {
+  const shortURL = req.params.shortURL
+  const longURL = urlDatabase[shortURL].longURL
+  res.redirect(longURL);
+});
+
+app.get("/login", (req, res) => {
+
+  res.render("urls_loginPage");
 });
 
 app.post("/urls", (req, res) => {
@@ -103,20 +136,9 @@ app.post("/urls/:id", (req, res) => {
   res.redirect("/urls/"+shortURL)
 });
 
-app.get("/u/:shortURL", (req, res) => {
-  const shortURL = req.params.shortURL
-  const longURL = urlDatabase[shortURL]
-  res.redirect(longURL);
-});
-
-app.get("/login", (req, res) => {
-
-  res.render("urls_loginPage");
-})
-
 app.post("/urls/:shortURL/delete", (req, res) => {
   const shortURL = req.params.shortURL
-  delete urlDatabase[shortURL]
+  delete urlDatabase[shortURL].longURL
   res.redirect("/urls");
 });
 
@@ -138,11 +160,6 @@ app.post("/logout", (req, res) => {
   res.redirect("/urls");
 }); 
 
-app.get("/register", (req, res) => {
-  
-  res.render("urls_registration")
-});
-
 app.post("/register", (req, res) => {
   const id = generateRandomString()
   const newUser = {
@@ -163,6 +180,8 @@ app.post("/register", (req, res) => {
   res.cookie("user_id", id);
   res.redirect("/urls");
 });
+
+
 
 
 
